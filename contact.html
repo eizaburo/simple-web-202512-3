@@ -63,7 +63,7 @@
         const regex_message = /^.{1,10}$/;
 
         //ボタンクリック時
-        button.addEventListener("click", (e) => {
+        button.addEventListener("click", async (e) => {
 
             e.preventDefault();
 
@@ -89,7 +89,31 @@
                 !error_message_email.classList.contains("show") &
                 !error_message_message.classList.contains("show")
             ) {
-                alert(`title=${title.value}, email=${email.value}, message=${message.value}`);
+                //バリデーションがOKだったときの処理
+                // alert(`title=${title.value}, email=${email.value}, message=${message.value}`);
+
+                try {
+
+                    const url = "https://script.google.com/macros/s/AKfycbyzNZmAv5bxnw-_MF_tZ91q8uxs3AT_Uz0Qomf56EyYyLq9Qr7mFjmLPiZM4HpsWjDv/exec";
+
+                    const result = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            title: title.value,
+                            email: email.value,
+                            message: message.value
+                        }).toString(),
+                    });
+
+                    const responseText = await result.text();
+                    alert(responseText);
+
+                } catch (error) {
+                    alert(error);
+                }
             }
 
         });
